@@ -1,2 +1,2 @@
-# WhereDidTheWineGo
-Where did the wine go? Mapping winery data with Arcade and Cedar
+# Where Did The Wine Go?
+Mapping winery data with Arcade and Cedar

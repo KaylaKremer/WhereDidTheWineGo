@@ -5,18 +5,13 @@
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
     <title>Arcade Labels</title>
     <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/themes/light/main.css"/>
+    <link rel="stylesheet" href="./main.css"/>
+    
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.21.12/amcharts.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.21.12/serial.js'></script>
+    <script src='https://unpkg.com/@esri/cedar@1.0.0-beta.2/dist/umd/cedar.js'></script>
+    <script src='https://unpkg.com/@esri/cedar@1.0.0-beta.2/dist/umd/themes/amCharts/calcite.js'></script>
     <script src="https://js.arcgis.com/4.11/"></script>
-
-    <style>
-      html,
-      body,
-      #viewDiv {
-        padding: 0;
-        margin: 0;
-        height: 100%;
-        width: 100%;
-      }
-    </style>
 
     <script type="text/plain" id="amenities">
       var i = 0;
@@ -126,11 +121,113 @@
             haloSize: 1
           };
         }
+        
+        //Cedar chart stuff
+        
+        var definition1 = {
+          type: 'bar',
+          datasets: [{
+            url: "https://services5.arcgis.com/cMBqYE4wmbXNMvex/ArcGIS/rest/services/Virginia_Wineries/FeatureServer/1",
+            query: {
+              groupByFieldsForStatistics: 'Region',
+              outStatistics: [{
+                'statisticType': 'count',
+                'onStatisticField': 'TastingRoo',
+                'outStatisticFieldName': 'TastingRoo_SUM'
+              }],
+              orderByFields: 'TastingRoo_SUM DESC'
+            }
+          }],
+          series: [{
+            category: {
+              field: 'Region',
+              label: 'Virginia Region'
+            },
+            value: {
+              field: 'TastingRoo_SUM',
+              label: 'Tasting Room'
+            }
+          }]
+        };
+
+    var cedarChart1 = new cedar.Chart('chart1', definition1);
+    cedarChart1.show();
+  
+    view.watch('extent', function(newValue) {
+      var newExtent = JSON.stringify(newValue);
+      cedarChart1.datasets()[0].query.geometry = newExtent;
+      cedarChart1.show();
+    });
+        
+    //     view.whenLayerView(layer).then(function(layerView) {
+    //       layerView.watch("updating", function(value) {
+    //         if (!value) {
+    //           layerView
+    //             .queryFeatures({
+    //               geometry: view.extent,
+    //               returnGeometry: true
+    //             })
+    //             .then(function(results) {
+    //     		  var features = [];
+    //                   var graphics = results.features;
+    //                   graphics.forEach(function(result, index) {
+    //                       var attributes = result.attributes;
+    //         		      features.push({
+    //         		        attributes: {
+    //         		        Region: attributes.Region,
+    //             			Overnight: attributes.Overnight,
+    //             			FoodAvaila: attributes.FoodAvaila,
+    //             			GiftShop: attributes.GiftShop,
+    //             			TastingRoo: attributes.TastingRoo,
+    //             			TastingFee: attributes.TastingFee,
+    //             			GroupTour: attributes.GroupTour,
+    //             			PrivatePar: attributes.PrivatePar,
+    //             			Weddings: attribute.Weddings
+    //         		        }
+	// 	                 });
+    //                  });
+    //     	      loadCharts(features, "chart1", "Region", "Region")
+    //     		  loadCharts(features, "chart2", "GiftShop", "Gift Shop")
+    //     		  loadCharts(features, "chart3", "TastingRoo", "Tasting Room")
+                  
+    //             })
+    //             .catch(function(error) {
+    //               console.error("query failed: ", error);
+    //             });
+    //         }
+    //       });
+    //     });
+		  
+	// function loadCharts(features, chartName, chartField, chartLabel){
+	//   var definition = {
+	//     type: "bar",
+	//     datasets: [{
+	// 	data: {
+	// 	  features: features
+	//         }
+	//     }],
+	//     series: [{
+	//         category: {
+    // 		  field: "STATE_ABBR",
+    // 		  label: "US State"
+	// 	 },
+	// 	 value: {
+	// 	   field: chartField,
+	// 	   label: chartLabel
+	// 	 }
+	//       }]
+	//     };
+	//     var cedarChart = new cedar.Chart(chartName, definition);
+	//       cedarChart.show();
+	//     }
       });
     </script>
+    
   </head>
-
   <body>
     <div id="viewDiv"></div>
+    <div id="chart1"></div>
+    <div id="chart2"></div>
+    <div id="chart3"></div>
   </body>
 </html>

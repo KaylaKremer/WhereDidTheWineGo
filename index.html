@@ -114,7 +114,36 @@
             type: 'simple',
             symbol: wineIcon
           },
-          labelingInfo: [nameClass, amenitiesClass]
+          labelingInfo: [nameClass, amenitiesClass],
+          popupTemplate: {
+            title: "{Name}",
+            content: [
+              {
+                type: "fields",
+                fieldInfos: [
+                  {
+                    fieldName: "Name"
+                  },
+                  {
+                    fieldName: "Address",
+                    label: "Address"
+                  },
+                  {
+                    fieldName: "City"
+                  },
+                  {
+                    fieldName: "State"
+                  },
+                  {
+                    fieldName: "Phone"
+                  },
+                  {
+                    fieldName: "Website"
+                  }
+                ]
+              }
+            ]
+          }
         });
         view.map.add(layer);
         function createTextSymbol(color) {

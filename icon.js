@@ -10,3 +10,29 @@ const symbol = {
   },
   size: 15
 };
+
+
+layer.popupTemplate = {
+  expressionInfos: [{
+    name: "participation-rate",
+    title: "% of population 16+ participating in the labor force",
+    expression: "Round(($feature.CIVLBFR_CY / $feature.POP_16UP)*100,2)"
+  }],
+  content: "In {NAME} county, {expression/participation-rate}% of the population"
+    + " participates in the labor force."
+};
+
+
+layer.popupTemplate = {
+  expressionInfos: [{
+    name: "participation-rate",
+    title: "% of population 16+ participating in the labor force",
+    expression: "Round(($feature.CIVLBFR_CY / $feature.POP_16UP)*100,2)"
+  }],
+  content: [{
+    type: "fields",
+    fieldInfos: [{
+      fieldName: "expression/participation-rate"
+    }]
+  }]
+};

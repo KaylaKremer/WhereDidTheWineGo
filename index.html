@@ -46,14 +46,16 @@
         'esri/layers/FeatureLayer',
         'esri/geometry/Extent',
         'esri/Basemap',
-        'esri/layers/VectorTileLayer'
+        'esri/layers/VectorTileLayer',
+        'esri/geometry/Point'
       ], function(
         Map,
         MapView,
         FeatureLayer,
         Extent,
         Basemap,
-        VectorTileLayer
+        VectorTileLayer,
+        Point
       ) {
         var wineIcon = {
           type: 'picture-marker',
@@ -95,9 +97,10 @@
           },
           minScale: minScale
         };
-        nameClass.symbol = createTextSymbol('black');
+        nameClass.symbol = createTextSymbol('#4a0073', '#df78ef');
 
         var amenitiesArcade = document.getElementById('amenities').text;
+
         var amenitiesClass = {
           labelExpressionInfo: {
             expression: amenitiesArcade
@@ -105,10 +108,33 @@
           labelPlacement: 'below-right',
           minScale: minScale
         };
-        amenitiesClass.symbol = createTextSymbol('#3ba53f');
+        amenitiesClass.symbol = createTextSymbol('#263238','#bdbdbd');
         var serviceUrl =
           'https://services5.arcgis.com/cMBqYE4wmbXNMvex/ArcGIS/rest/services/Virginia_Wineries/FeatureServer/1';
-        var layer = new FeatureLayer({
+
+
+          // function getLocation() {
+          // if (navigator.geolocation) {
+          // navigator.geolocation.getCurrentPosition(showPosition);
+          //   } else {
+          //   alert("Geolocation is not supported by this browser.");
+          // }
+          // function showPosition(position) {
+          //  var location = [position.coords.longitude, position.coords.latitude]; 
+          // }
+          var geom2 = Point({ 
+            // Our current location
+            latitude: 38.890974799999995,
+            longitude: -77.08625049999999}); 
+            console.log(geom2);
+          // var geom2 = { 
+          //   type: "point", 
+          //   // Our current location
+          //   latitude: 38.890974799999995,
+          //   longitude: -77.08625049999999}; 
+            console.log(geom2);
+
+          var layer = new FeatureLayer({
           url: serviceUrl,
           renderer: {
             type: 'simple',
@@ -116,45 +142,53 @@
           },
           labelingInfo: [nameClass, amenitiesClass],
           popupTemplate: {
-            title: "{Name}",
-            content: [
-              {
-                type: "fields",
-                fieldInfos: [
-                  {
-                    fieldName: "Name"
-                  },
-                  {
-                    fieldName: "Address",
-                    label: "Address"
-                  },
-                  {
-                    fieldName: "City"
-                  },
-                  {
-                    fieldName: "State"
-                  },
-                  {
-                    fieldName: "Phone"
-                  },
-                  {
-                    fieldName: "Website"
-                  }
-                ]
-              }
-            ]
+            // title: "{Name}",
+            // content: [
+            //   {
+            //     type: "fields",
+            //     fieldInfos: [
+            //       {
+            //         fieldName: "Name"
+            //       },
+            //       {
+            //         fieldName: "Address",
+            //         label: "Address"
+            //       },
+            //       {
+            //         fieldName: "City"
+            //       },
+            //       {
+            //         fieldName: "State"
+            //       },
+            //       {
+            //         fieldName: "Phone"
+            //       },
+            //       {
+            //         fieldName: "Website"
+            //       }
+            //     ]
+            //   }
+            // ]
+
+            expressionInfos: [{
+            name: "vineyard-amenities",
+            title: "# of amenities provided by vineyard",
+            expression: "Distance($feature.geometry, geom2, 'miles')"
+            }],
+            content: "You are {expression/vineyard-amenities} miles away"
+            + " from {NAME}."
           }
         });
         view.map.add(layer);
-        function createTextSymbol(color) {
+        function createTextSymbol(fontColor, haloColor) {
           return {
             type: 'text',
             font: {
-              size: 12,
+              size: 14,
               weight: 'bold'
             },
-            color: 'white',
-            haloColor: color,
+            color: fontColor,
+            haloColor: haloColor,
             haloSize: 1
           };
         }

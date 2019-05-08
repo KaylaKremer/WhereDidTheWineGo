@@ -6,9 +6,9 @@
     <title>Arcade Labels</title>
     <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/themes/light/main.css"/>
     <link rel="stylesheet" href="./main.css"/>
-    
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.21.12/amcharts.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.21.12/serial.js'></script>
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="https://www.amcharts.com/lib/3/serial.js"></script>
+    <script src="https://www.amcharts.com/lib/3/pie.js"></script>
     <script src='https://unpkg.com/@esri/cedar@1.0.0-beta.2/dist/umd/cedar.js'></script>
     <script src='https://unpkg.com/@esri/cedar@1.0.0-beta.2/dist/umd/themes/amCharts/calcite.js'></script>
     <script src="https://js.arcgis.com/4.11/"></script>
@@ -123,111 +123,153 @@
         }
         
         //Cedar chart stuff
+        // var definition1 = {
+        //   type: 'bar',
+        //   datasets: [{
+        //     url: "https://services5.arcgis.com/cMBqYE4wmbXNMvex/ArcGIS/rest/services/Virginia_Wineries/FeatureServer/1",
+        //     query: {
+        //       groupByFieldsForStatistics: 'Region',
+        //       outStatistics: [{
+        //         'statisticType': 'count',
+        //         'onStatisticField': 'TastingRoo',
+        //         'outStatisticFieldName': 'TastingRoo_COUNT'
+        //       }],
+        //       orderByFields: 'TastingRoo_COUNT DESC'
+        //     }
+        //   }],
+        //   series: [{
+        //     category: {
+        //       field: 'Region',
+        //       label: 'Virginia Region'
+        //     },
+        //     value: {
+        //       field: 'TastingRoo_COUNT',
+        //       label: 'Tasting Room'
+        //     }
+        //   }]
+        // };
         
         var definition1 = {
-          type: 'bar',
-          datasets: [{
-            url: "https://services5.arcgis.com/cMBqYE4wmbXNMvex/ArcGIS/rest/services/Virginia_Wineries/FeatureServer/1",
-            query: {
-              groupByFieldsForStatistics: 'Region',
-              outStatistics: [{
-                'statisticType': 'count',
-                'onStatisticField': 'TastingRoo',
-                'outStatisticFieldName': 'TastingRoo_SUM'
-              }],
-              orderByFields: 'TastingRoo_SUM DESC'
-            }
-          }],
-          series: [{
-            category: {
-              field: 'Region',
-              label: 'Virginia Region'
+          "type": "bar",
+          "datasets": [
+            {
+              "url": "https://services5.arcgis.com/cMBqYE4wmbXNMvex/ArcGIS/rest/services/Virginia_Wineries/FeatureServer/1",
+              "name": "Group Tour",
+              "query": {
+                "orderByFields": "GroupTour_COUNT DESC",
+                "groupByFieldsForStatistics": "Region",
+                "outStatistics": [{
+                  "statisticType": "count",
+                  "onStatisticField": "GroupTour",
+                  "outStatisticFieldName": "GroupTour_COUNT"
+                }]
+              },
+              "join": "Region"
             },
-            value: {
-              field: 'TastingRoo_SUM',
-              label: 'Tasting Room'
+            {
+              "url": "https://services5.arcgis.com/cMBqYE4wmbXNMvex/ArcGIS/rest/services/Virginia_Wineries/FeatureServer/1",
+              "name": "Tasting Room",
+              "query": {
+                "orderByFields": "TastingRoo_COUNT DESC",
+                "groupByFieldsForStatistics": "Region",
+                "outStatistics": [{
+                  "statisticType": "count",
+                  "onStatisticField": "TastingRoo",
+                  "outStatisticFieldName": "TastingRoo_COUNT"
+                }]
+              },
+              "join": "Region"
+            },
+            {
+              "url": "https://services5.arcgis.com/cMBqYE4wmbXNMvex/ArcGIS/rest/services/Virginia_Wineries/FeatureServer/1",
+              "name": "Gift Shop",
+              "query": {
+                "orderByFields": "GiftShop_COUNT DESC",
+                "groupByFieldsForStatistics": "Region",
+                "outStatistics": [{
+                  "statisticType": "count",
+                  "onStatisticField": "GiftShop",
+                  "outStatisticFieldName": "GiftShop_COUNT"
+                }]
+              },
+              "join": "Region"
             }
-          }]
+          ],
+          "series": [
+            {
+              "category": {"field": "Region", "label": "VA Region"},
+              "value": { "field": "GroupTour_COUNT", "label": "Group Tour"},
+              "source": "Group Tour",
+              "stack": true
+            },
+            {
+              "category": {"field": "Region", "label": "VA Region"},
+              "value": { "field": "TastingRoo_COUNT", "label": "Tasting Room"},
+              "source": "Tasting Room",
+              "stack": true
+            },
+            {
+              "category": {"field": "Region", "label": "VA Region"},
+              "value": { "field": "GiftShop_COUNT", "label": "Gift Shop"},
+              "source": "Gift Shop",
+              "stack": true
+            }
+          ]
+        };
+        
+        var definition2 = {
+          "type": "pie",
+          "datasets": [
+            {
+              "url": "https://services5.arcgis.com/cMBqYE4wmbXNMvex/ArcGIS/rest/services/Virginia_Wineries/FeatureServer/1",
+              "query": {
+                "orderByFields": "Region_COUNT DESC",
+                "groupByFieldsForStatistics": "Region",
+                "outStatistics": [
+                  {
+                    "statisticType": "count",
+                    "onStatisticField": "Region",
+                    "outStatisticFieldName": "Region_COUNT"
+                  }
+                ]
+              }
+            }
+          ],
+          "series": [
+            {
+              "category": {"field": "Region", "label": "Region"},
+              "value": {
+                "field": "Region_COUNT",
+                "label": "Winery Count"
+              }
+            }
+          ]
         };
 
-    var cedarChart1 = new cedar.Chart('chart1', definition1);
-    cedarChart1.show();
-  
-    view.watch('extent', function(newValue) {
-      var newExtent = JSON.stringify(newValue);
-      cedarChart1.datasets()[0].query.geometry = newExtent;
-      cedarChart1.show();
-    });
+        var cedarChart1 = new cedar.Chart('chart1', definition1);
+        cedarChart1.show();
         
-    //     view.whenLayerView(layer).then(function(layerView) {
-    //       layerView.watch("updating", function(value) {
-    //         if (!value) {
-    //           layerView
-    //             .queryFeatures({
-    //               geometry: view.extent,
-    //               returnGeometry: true
-    //             })
-    //             .then(function(results) {
-    //     		  var features = [];
-    //                   var graphics = results.features;
-    //                   graphics.forEach(function(result, index) {
-    //                       var attributes = result.attributes;
-    //         		      features.push({
-    //         		        attributes: {
-    //         		        Region: attributes.Region,
-    //             			Overnight: attributes.Overnight,
-    //             			FoodAvaila: attributes.FoodAvaila,
-    //             			GiftShop: attributes.GiftShop,
-    //             			TastingRoo: attributes.TastingRoo,
-    //             			TastingFee: attributes.TastingFee,
-    //             			GroupTour: attributes.GroupTour,
-    //             			PrivatePar: attributes.PrivatePar,
-    //             			Weddings: attribute.Weddings
-    //         		        }
-	// 	                 });
-    //                  });
-    //     	      loadCharts(features, "chart1", "Region", "Region")
-    //     		  loadCharts(features, "chart2", "GiftShop", "Gift Shop")
-    //     		  loadCharts(features, "chart3", "TastingRoo", "Tasting Room")
-                  
-    //             })
-    //             .catch(function(error) {
-    //               console.error("query failed: ", error);
-    //             });
-    //         }
-    //       });
-    //     });
-		  
-	// function loadCharts(features, chartName, chartField, chartLabel){
-	//   var definition = {
-	//     type: "bar",
-	//     datasets: [{
-	// 	data: {
-	// 	  features: features
-	//         }
-	//     }],
-	//     series: [{
-	//         category: {
-    // 		  field: "STATE_ABBR",
-    // 		  label: "US State"
-	// 	 },
-	// 	 value: {
-	// 	   field: chartField,
-	// 	   label: chartLabel
-	// 	 }
-	//       }]
-	//     };
-	//     var cedarChart = new cedar.Chart(chartName, definition);
-	//       cedarChart.show();
-	//     }
+        var cedarChart2 = new cedar.Chart('chart2', definition2);
+        cedarChart2.show();
+      
+        view.watch('extent', function(newValue) {
+          var newExtent = JSON.stringify(newValue);
+          cedarChart1.datasets()[0].query.geometry = newExtent;
+          cedarChart1.show();
+          cedarChart2.datasets()[0].query.geometry = newExtent;
+          cedarChart2.show();
+        });
+    
       });
     </script>
     
   </head>
   <body>
+    <div id="title">
+      <h1>Where did the Wine Go? 🍷🤔</h1>
+    </div>
     <div id="viewDiv"></div>
     <div id="chart1"></div>
     <div id="chart2"></div>
-    <div id="chart3"></div>
   </body>
 </html>

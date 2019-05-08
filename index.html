@@ -124,8 +124,11 @@
           // }
           var geom2 = Point({ 
             // Our current location
-            latitude: 38.890974799999995,
-            longitude: -77.08625049999999}); 
+            // latitude: 38.890974799999995,
+            // longitude: -77.08625049999999,
+            x: 38.890974799999995,
+            y: -77.08625049999999
+          }); 
             console.log(geom2);
           // var geom2 = { 
           //   type: "point", 
@@ -142,41 +145,41 @@
           },
           labelingInfo: [nameClass, amenitiesClass],
           popupTemplate: {
-            // title: "{Name}",
-            // content: [
-            //   {
-            //     type: "fields",
-            //     fieldInfos: [
-            //       {
-            //         fieldName: "Name"
-            //       },
-            //       {
-            //         fieldName: "Address",
-            //         label: "Address"
-            //       },
-            //       {
-            //         fieldName: "City"
-            //       },
-            //       {
-            //         fieldName: "State"
-            //       },
-            //       {
-            //         fieldName: "Phone"
-            //       },
-            //       {
-            //         fieldName: "Website"
-            //       }
-            //     ]
-            //   }
-            // ]
+            title: "{Name}",
+            content: [
+              {
+                type: "fields",
+                fieldInfos: [
+                  {
+                    fieldName: "Name"
+                  },
+                  {
+                    fieldName: "Address",
+                    label: "Address"
+                  },
+                  {
+                    fieldName: "City"
+                  },
+                  {
+                    fieldName: "State"
+                  },
+                  {
+                    fieldName: "Phone"
+                  },
+                  {
+                    fieldName: "Website"
+                  }
+                ]
+              }
+            ]
 
-            expressionInfos: [{
-            name: "vineyard-amenities",
-            title: "# of amenities provided by vineyard",
-            expression: "Distance($feature.geometry, geom2, 'miles')"
-            }],
-            content: "You are {expression/vineyard-amenities} miles away"
-            + " from {NAME}."
+            // expressionInfos: [{
+            // name: "vineyard-amenities",
+            // title: "# of amenities provided by vineyard",
+            // expression: "Distance($feature, geom2, 'miles')"
+            // }],
+            // content: "You are {expression/vineyard-amenities} miles away"
+            // + " from {NAME}."
           }
         });
         view.map.add(layer);
@@ -192,7 +195,7 @@
             haloSize: 1
           };
         }
-
+        console.log(Distance($feature, geom2, 'miles'));
         //Cedar chart stuff
 
         var definition1 = {

@@ -20,6 +20,7 @@ body {
     box-shadow: 0px 0px 0px 1px black inset;
     float: left;
     background: url('./wine.jpg') no-repeat fixed center;
+    background-size: cover;
 }
 
 #title {

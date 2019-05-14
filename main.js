@@ -4,9 +4,8 @@ require([
     "esri/layers/FeatureLayer",
     "esri/geometry/Extent",
     "esri/Basemap",
-    "esri/layers/VectorTileLayer",
-    'esri/geometry/Point'
-  ], function(Map, MapView, FeatureLayer, Extent, Basemap, VectorTileLayer, Point) {
+    "esri/layers/VectorTileLayer"
+  ], function(Map, MapView, FeatureLayer, Extent, Basemap, VectorTileLayer) {
   
     var basemap = new Basemap({
         baseLayers: [
@@ -61,13 +60,6 @@ require([
     amenitiesClass.symbol = createTextSymbol('#263238','#bdbdbd');
     var serviceUrl =
       "https://services5.arcgis.com/cMBqYE4wmbXNMvex/ArcGIS/rest/services/Virginia_Wineries/FeatureServer/1";
-      // var geom2 = Point({ 
-      //   // Our current location
-      //   // latitude: 38.890974799999995,
-      //   // longitude: -77.08625049999999,
-      //   x: 38.890974799999995,
-      //   y: -77.08625049999999
-      // }); 
     var layer = new FeatureLayer({
       url: serviceUrl,
       renderer: {
@@ -106,14 +98,6 @@ require([
             ]
           }
         ]
-
-        // expressionInfos: [{
-        // name: "vineyard-amenities",
-        // title: "# of amenities provided by vineyard",
-        // expression: "Distance($feature, geom2, 'miles')"
-        // }],
-        // content: "You are {expression/vineyard-amenities} miles away"
-        // + " from {NAME}."
       }
     });
     view.map.add(layer);
@@ -240,5 +224,4 @@ require([
       pieChart.datasets()[0].query.geometry = newExtent;
       pieChart.show();
     });
-
   });
